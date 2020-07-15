@@ -21,6 +21,6 @@ class ByteBufferTest extends TestCase
         $buffer = new ByteBuffer();
         $buffer->writeI8(1);
         $buffer->writeI8(2);
-        print_r($buffer->toUint8Array());
+        self::assertCount(2, $buffer->toUint8Array());
     }
 }
