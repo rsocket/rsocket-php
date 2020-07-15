@@ -4,8 +4,6 @@
 namespace RSocket\frame;
 
 use RSocket\io\ByteBuffer;
-use RSocket\Payload;
-use RSocket\utils\UTF8;
 
 class LeaseFrame extends RSocketFrame
 {
