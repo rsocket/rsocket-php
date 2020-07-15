@@ -25,7 +25,7 @@ class CompositeMetadata
         return new CompositeMetadata(ByteBuffer::wrap($u8Array));
     }
 
-    public static function fromEntries(array $entries): self
+    public static function fromEntries(MetadataEntry ...$entries): self
     {
         $compositeMetadata = new CompositeMetadata(new ByteBuffer());
         foreach ($entries as $entry) {
@@ -63,9 +63,11 @@ class CompositeMetadata
         }
     }
 
+    /**
+     * @return iterable<MetadataEntry> metadata entries
+     */
     public function getAllEntries(): iterable
     {
-        $entries = [];
         $buffer = $this->buffer;
         while ($buffer->isReadable()) {
             $metadataTypeOrLength = $buffer->readI8();
@@ -77,7 +79,7 @@ class CompositeMetadata
                     if ($dataLength !== null) {
                         $content = $buffer->readBytes($dataLength);
                         if ($content !== null) {
-                            $entries[] = MetadataEntry::wellKnown($typeId, $wellKnownMimeType, $content);
+                            yield MetadataEntry::wellKnown($typeId, $wellKnownMimeType, $content);
                         }
                     }
                 } else {
@@ -88,14 +90,13 @@ class CompositeMetadata
                             $content = $buffer->readBytes($dataLength);
                             if ($content !== null) {
                                 $mimeType = UTF8::decode($mimeTypeU8Array);
-                                $entries[] = MetadataEntry::explicit($mimeType, $content);
+                                yield MetadataEntry::explicit($mimeType, $content);
                             }
                         }
                     }
                 }
             }
         }
-        return $entries;
     }
 
     public function toUint8Array(): array
