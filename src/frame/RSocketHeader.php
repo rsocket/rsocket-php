@@ -34,5 +34,14 @@ class RSocketHeader
         }
     }
 
+    public function __toString(): string
+    {
+        $text = json_encode($this);
+        if (is_string($text)) {
+            return $text;
+        }
+        return "";
+    }
+
 
 }
