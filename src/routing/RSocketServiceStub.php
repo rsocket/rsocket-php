@@ -34,8 +34,13 @@ class RSocketServiceStub
                 $payloadData = UTF8::encode(json_encode($params));
             }
             $rsocket->requestResponse(Payload::fromArray($compositeMetadata->toUint8Array(), $payloadData))
-                ->map(function (Payload $payload) {
-                    return json_decode($payload->getDataUtf8());
+                ->map(function (Payload $payload) use ($routingKey) {
+                    $arrayObj = json_decode($payload->getDataUtf8());
+                    $decodeHandler = JsonDecodeFactory::getHandler($routingKey);
+                    if ($decodeHandler !== null) {
+                        $decodeHandler($arrayObj);
+                    }
+                    return $arrayObj;
                 });
         });
     }
