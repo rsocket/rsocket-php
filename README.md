@@ -73,6 +73,7 @@ print("RSocket Server started on ${listenUri}");
 
 * RSocket: https://rsocket.io
 * ReactPHP: https://github.com/reactphp/reactphp
+* ReactPHP Projects: https://github.com/reactphp/reactphp/wiki/Users
 * RxPHP: https://github.com/ReactiveX/RxPHP
 * New .phpstorm.meta.php features: https://blog.jetbrains.com/phpstorm/2019/02/new-phpstorm-meta-php-features/
 * PHP Reactive Programming: https://www.packtpub.com/web-development/php-reactive-programming
