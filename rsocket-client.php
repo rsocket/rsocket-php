@@ -18,8 +18,8 @@ Scheduler::setDefaultFactory(function () use ($loop) {
 $rsocketCall = function (RSocket $rsocket) {
     $observablePayload = $rsocket->requestResponse(Payload::fromText("text/plain", "Ping"));
     $observablePayload->subscribe(
-        function (Payload $x) {
-            echo 'Result: ' . $x->getDataUtf8();
+        function (Payload $payload) {
+            echo 'Result: ' . $payload->getDataUtf8() . PHP_EOL;
         }
     );
 };
