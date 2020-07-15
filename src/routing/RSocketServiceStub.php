@@ -18,6 +18,12 @@ class RSocketServiceStub
      */
     private Observable $target;
 
+    public function __construct(string $serviceName, Observable $target)
+    {
+        $this->serviceName = $serviceName;
+        $this->target = $target;
+    }
+
     public function __call(string $methodName, array $params): Observable
     {
         $routingKey = $this->serviceName . '.' . $methodName;
