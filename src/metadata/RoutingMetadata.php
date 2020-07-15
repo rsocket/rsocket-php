@@ -9,7 +9,7 @@ class RoutingMetadata extends TaggingMetadata
     public string $routingKey;
     public ?array $extraTags = null;
 
-    public function __construct(string $routingKey, ?array $extraTags)
+    public function __construct(string $routingKey, ?array $extraTags = null)
     {
         $this->routingKey = $routingKey;
         $this->extraTags = $extraTags;
