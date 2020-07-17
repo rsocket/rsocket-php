@@ -45,6 +45,10 @@ $server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUri);
 print("RSocket Server started on ${listenUri}");
 ```
 
+# RSocket Service stub and routing
+
+Please check https://github.com/rsocket/rsocket-php/tree/master/tests/route
+
 # RSocket
 
 - Operations
