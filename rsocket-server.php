@@ -26,9 +26,3 @@ $socketAcceptor = CallableSocketAcceptor::handle(function ($setupPayload, $sendi
 $server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUri);
 echo "RSocket Server started on ${listenUri}\n";
 $loop->run();
-
-
-
-
-
-
