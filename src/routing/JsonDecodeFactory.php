@@ -13,9 +13,12 @@ class JsonDecodeFactory
         self::$decodeHandlers[$methodFullName] = $decodeHandler;
     }
 
-    public static function getHandler(string $methodFullName): callable
+    public static function getHandler(string $methodFullName): ?callable
     {
-        return self::$decodeHandlers[$methodFullName];
+        if (array_key_exists($methodFullName, self::$decodeHandlers)) {
+            return self::$decodeHandlers[$methodFullName];
+        }
+        return null;
     }
 
 }
