@@ -34,4 +34,18 @@ class RoutingMetadata extends TaggingMetadata
         }
         return new RoutingMetadata($tags[0], array_slice($tags, 1));
     }
+
+    public function getRoutingParts(): array
+    {
+        if (strpos($this->routingKey, '.') !== false) {
+            $pos = strrpos($this->routingKey, ".", -1);
+            $serviceName = substr($this->routingKey, 0, $pos);
+            $method = substr($this->routingKey, $pos + 1);
+            return array(
+                "service" => $serviceName,
+                "method" => $method
+            );
+        }
+        return array();
+    }
 }
