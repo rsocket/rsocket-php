@@ -6,21 +6,21 @@ namespace RSocket\routing;
 
 class RSocketServiceRouter
 {
-    private static array $routingTable = [];
+    private array $routingTable = [];
 
-    public static function addService(string $serviceName, $serviceInstance): void
+    public function addService(string $serviceName, $serviceInstance): void
     {
-        self::$routingTable[$serviceName] = $serviceInstance;
+        $this->routingTable[$serviceName] = $serviceInstance;
     }
 
-    public static function isServiceAvailable(string $serviceName): bool
+    public function isServiceAvailable(string $serviceName): bool
     {
-        return array_key_exists($serviceName, self::$routingTable);
+        return array_key_exists($serviceName, $this->routingTable);
     }
 
-    public static function invoke(string $serviceName, string $method, $params = null)
+    public function invoke(string $serviceName, string $method, $params = null)
     {
-        $callable = [self::$routingTable[$serviceName], $method];
+        $callable = [$this->routingTable[$serviceName], $method];
         if ($params === null) {
             return $callable();
         }
