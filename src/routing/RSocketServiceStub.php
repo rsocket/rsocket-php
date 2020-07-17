@@ -27,20 +27,28 @@ class RSocketServiceStub
     public function __call(string $methodName, array $params): Observable
     {
         $routingKey = $this->serviceName . '.' . $methodName;
-        return $this->target->map(function (RSocket $rsocket) use (&$routingKey, &$params) {
+        return $this->target->flatMap(function (RSocket $rsocket) use (&$routingKey, &$params) {
             $compositeMetadata = CompositeMetadata::fromEntries(new RoutingMetadata($routingKey));
             $payloadData = null;
             if ($params !== null) {
                 $payloadData = UTF8::encode(json_encode($params));
             }
-            $rsocket->requestResponse(Payload::fromArray($compositeMetadata->toUint8Array(), $payloadData))
+            return $rsocket->requestResponse(Payload::fromArray($compositeMetadata->toUint8Array(), $payloadData))
                 ->map(function (Payload $payload) use ($routingKey) {
-                    $arrayObj = json_decode($payload->getDataUtf8());
-                    $decodeHandler = JsonDecodeFactory::getHandler($routingKey);
-                    if ($decodeHandler !== null) {
-                        $decodeHandler($arrayObj);
+                    $utf8Data = $payload->getDataUtf8();
+                    if ($utf8Data !== null && $utf8Data !== '') {
+                        $firstChar = $utf8Data[0];
+                        // json text validate & decode
+                        if ($firstChar === '{' || $firstChar === '[' || $firstChar === '"') {
+                            $arrayObj = json_decode($utf8Data);
+                            $decodeHandler = JsonDecodeFactory::getHandler($routingKey);
+                            if ($decodeHandler !== null) {
+                                $decodeHandler($arrayObj);
+                            }
+                            return $arrayObj;
+                        }
                     }
-                    return $arrayObj;
+                    return $utf8Data;
                 });
         });
     }
