@@ -99,6 +99,15 @@ class CompositeMetadata
         }
     }
 
+    public function getAllEntriesArray(): array
+    {
+        $entryArray = [];
+        foreach ($this->getAllEntries() as $entry) {
+            $entryArray[$entry->mimeType] = $entry;
+        }
+        return $entryArray;
+    }
+
     public function toUint8Array(): array
     {
         return $this->buffer->toUint8Array();
