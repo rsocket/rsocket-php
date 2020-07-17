@@ -35,21 +35,26 @@ class RSocketServiceStub
             }
             return $rsocket->requestResponse(Payload::fromArray($compositeMetadata->toUint8Array(), $payloadData))
                 ->map(function (Payload $payload) use ($routingKey) {
-                    $utf8Data = $payload->getDataUtf8();
-                    if ($utf8Data !== null && $utf8Data !== '') {
-                        $firstChar = $utf8Data[0];
-                        // json text validate & decode
-                        if ($firstChar === '{' || $firstChar === '[' || $firstChar === '"') {
-                            $arrayObj = json_decode($utf8Data);
-                            $decodeHandler = JsonDecodeFactory::getHandler($routingKey);
-                            if ($decodeHandler !== null) {
-                                $decodeHandler($arrayObj);
-                            }
-                            return $arrayObj;
-                        }
-                    }
-                    return $utf8Data;
+                    return $this->decodePayloadData($payload, $routingKey);
                 });
         });
+    }
+
+    public function decodePayloadData(Payload $payload, string $routingKey)
+    {
+        $utf8Data = $payload->getDataUtf8();
+        if ($utf8Data !== null && $utf8Data !== '') {
+            $firstChar = $utf8Data[0];
+            // json text validate & decode
+            if ($firstChar === '{' || $firstChar === '[' || $firstChar === '"') {
+                $arrayObj = json_decode($utf8Data);
+                $decodeHandler = JsonDecodeFactory::getHandler($routingKey);
+                if ($decodeHandler !== null) {
+                    $decodeHandler($arrayObj);
+                }
+                return $arrayObj;
+            }
+        }
+        return $utf8Data;
     }
 }
