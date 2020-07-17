@@ -4,6 +4,8 @@
 namespace RSocket\routing;
 
 
+use Rx\Observable;
+
 class RSocketServiceRouter
 {
     private array $routingTable = [];
@@ -18,7 +20,7 @@ class RSocketServiceRouter
         return array_key_exists($serviceName, $this->routingTable);
     }
 
-    public function invoke(string $serviceName, string $method, $params = null)
+    public function invoke(string $serviceName, string $method, $params = null): Observable
     {
         $callable = [$this->routingTable[$serviceName], $method];
         if ($params === null) {
