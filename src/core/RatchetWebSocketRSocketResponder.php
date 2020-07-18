@@ -5,7 +5,7 @@ namespace RSocket\core;
 
 
 use React\EventLoop\LoopInterface;
-use React\Socket\Server as Reactor;
+use React\Socket\Server;
 use RSocket\frame\FrameCodec;
 use RSocket\frame\FrameType;
 use RSocket\io\ByteBuffer;
@@ -24,7 +24,7 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
     private string $url;
     private SocketAcceptor $socketAcceptor;
     private LoopInterface $loop;
-    private WsServer $wsServer;
+    private Server $socketServer;
     private array $handlers = array();
 
     public function __construct(string $url, SocketAcceptor $socketAcceptor, LoopInterface $loop)
@@ -33,10 +33,10 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
         $urlArray = parse_url($url);
         $this->socketAcceptor = $socketAcceptor;
         $this->loop = $loop;
-        $this->wsServer = new WsServer($this);
-        $socket = new Reactor($urlArray['host'] . ':' . $urlArray['port'], $loop);
-        // start websocket server
-        new IoServer(new HttpServer($this->wsServer), $socket, $this->loop);
+        $wsServer = new WsServer($this);
+        $this->socketServer = new Server($urlArray['host'] . ':' . $urlArray['port'], $loop);
+        // start http server with websocket support
+        new IoServer(new HttpServer($wsServer), $this->socketServer, $this->loop);
     }
 
     public function onOpen(ConnectionInterface $conn): void
@@ -95,6 +95,6 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
 
     public function close(): void
     {
-
+        $this->socketServer->close();
     }
 }
