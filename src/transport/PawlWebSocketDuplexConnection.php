@@ -9,7 +9,7 @@ use Ratchet\RFC6455\Messaging\Message;
 use RSocket\DuplexConnection;
 use RSocket\io\ByteBuffer;
 
-class WebSocketDuplexConnection extends DuplexConnection
+class PawlWebSocketDuplexConnection extends DuplexConnection
 {
     private WebSocket $webSocket;
     private bool $closed = false;
