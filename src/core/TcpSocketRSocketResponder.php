@@ -9,7 +9,6 @@ use React\Promise\Promise;
 use React\Promise\Deferred;
 use React\Socket\ConnectionInterface;
 use React\Socket\ServerInterface;
-use RSocket\ConnectionSetupPayload;
 use RSocket\DuplexConnection;
 use RSocket\frame\FrameCodec;
 use RSocket\frame\FrameType;
@@ -17,7 +16,7 @@ use RSocket\io\Closeable;
 use RSocket\SocketAcceptor;
 use RSocket\transport\TcpDuplexConnection;
 
-class RSocketResponder extends RSocketBaseResponder implements Closeable
+class TcpSocketRSocketResponder extends RSocketBaseResponder implements Closeable
 {
     private string $url;
     private ServerInterface $serverInterface;
