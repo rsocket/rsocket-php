@@ -17,7 +17,7 @@ use RSocket\io\Closeable;
 use RSocket\SocketAcceptor;
 use RSocket\transport\TcpDuplexConnection;
 
-class RSocketResponder implements Closeable
+class RSocketResponder extends RSocketBaseResponder implements Closeable
 {
     private string $url;
     private ServerInterface $serverInterface;
@@ -50,16 +50,7 @@ class RSocketResponder implements Closeable
             foreach ($frames as $frame) {
                 $header = $frame->header;
                 if ($header->type === FrameType::$SETUP) {
-                    $setupFrame = $frame;
-                    $setupPayload = new ConnectionSetupPayload();
-                    $setupPayload->setDataMimeType($setupFrame->dataMimeType);
-                    $setupPayload->setMetadataMimeType($setupFrame->metadataMimeType);
-                    $setupPayload->setKeepAliveInterval($setupFrame->keepAliveInterval);
-                    $setupPayload->setKeepAliveMaxLifetime($setupFrame->keepAliveMaxLifetime);
-                    if (!is_null($setupFrame->payload)) {
-                        $setupPayload->metadata = $setupFrame->payload->metadata;
-                        $setupPayload->data = $setupFrame->payload->data;
-                    }
+                    $setupPayload = $this->parseSetupPayload($frame);
                     $temp = new RSocketRequester($this->loop, $duplexConn, $setupPayload, 'responder');
                     $responder = $socketAcceptor->accept($setupPayload, $temp);
                     if (is_null($responder)) {
