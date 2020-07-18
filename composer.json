@@ -29,7 +29,8 @@
   "require": {
     "react/event-loop": "v1.1.1",
     "react/socket": "v1.5.0",
-    "reactivex/rxphp": "2.0.7"
+    "reactivex/rxphp": "2.0.7",
+    "ratchet/pawl": "v0.3.5"
   },
   "require-dev": {
     "phpunit/phpunit": "9.2.5",
