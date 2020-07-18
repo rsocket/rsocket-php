@@ -21,19 +21,14 @@ class TcpDuplexConnection extends DuplexConnection
         $this->conn = $conn;
     }
 
-    public function availability(): float
-    {
-        return 1.0;
-    }
-
     public function close(): void
     {
         if (!$this->closed) {
             $this->closed = true;
+            $this->_availability = 0.0;
             $this->conn->close();
             if ($this->closeHandler !== null) {
-                $handler = $this->closeHandler;
-                $handler();
+                ($this->closeHandler)();
             }
         }
     }
