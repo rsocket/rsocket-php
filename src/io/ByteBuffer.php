@@ -84,22 +84,22 @@ class ByteBuffer
 
     public function readI16(): ?int
     {
-        return bytesToInt($this->readBytes(2));
+        return self::bytesToInt($this->readBytes(2));
     }
 
     public function readI24(): ?int
     {
-        return bytesToInt($this->readBytes(3));
+        return self::bytesToInt($this->readBytes(3));
     }
 
     public function readI32(): ?int
     {
-        return bytesToInt($this->readBytes(4));
+        return self::bytesToInt($this->readBytes(4));
     }
 
     public function readI64(): ?int
     {
-        return bytesToInt($this->readBytes(8));
+        return self::bytesToInt($this->readBytes(8));
     }
 
     public function writeBytes(array $bytes): void
@@ -133,27 +133,27 @@ class ByteBuffer
 
     public function writeI16(int $value): void
     {
-        $this->writeBytes(i16ToByteArray($value));
+        $this->writeBytes(self::i16ToByteArray($value));
     }
 
     public function writeI24(int $value): void
     {
-        $this->writeBytes(i24ToByteArray($value));
+        $this->writeBytes(self::i24ToByteArray($value));
     }
 
     public function insertI24(int $value): void
     {
-        $this->insertBytes(i24ToByteArray($value));
+        $this->insertBytes(self::i24ToByteArray($value));
     }
 
     public function writeI32(int $value): void
     {
-        $this->writeBytes(i32ToByteArray($value));
+        $this->writeBytes(self::i32ToByteArray($value));
     }
 
     public function writeI64(int $value): void
     {
-        $this->writeBytes(i64ToByteArray($value));
+        $this->writeBytes(self::i64ToByteArray($value));
     }
 
     public function autoGrow(): void
@@ -164,58 +164,58 @@ class ByteBuffer
         }
     }
 
-}
-
-
-function i64ToByteArray(int $int): array
-{
-    $bytes = array(0, 0, 0, 0, 0, 0, 0, 0);
-    $bytes[0] = $int >> 56 & 0xFF;
-    $bytes[1] = $int >> 48 & 0xFF;
-    $bytes[2] = $int >> 40 & 0xFF;
-    $bytes[3] = $int >> 32 & 0xFF;
-    $bytes[4] = $int >> 24 & 0xFF;
-    $bytes[5] = $int >> 16 & 0xFF;
-    $bytes[6] = $int >> 8 & 0xFF;
-    $bytes[7] = $int & 0xFF;
-    return $bytes;
-}
-
-function i32ToByteArray(int $int): array
-{
-    $bytes = array(0, 0, 0, 0);
-    $bytes[0] = $int >> 24 & 0xFF;
-    $bytes[1] = $int >> 16 & 0xFF;
-    $bytes[2] = $int >> 8 & 0xFF;
-    $bytes[3] = $int & 0xFF;
-    return $bytes;
-}
-
-function i24ToByteArray(int $int): array
-{
-    $bytes = array(0, 0, 0);
-    $bytes[0] = $int >> 16 & 0xFF;
-    $bytes[1] = $int >> 8 & 0xFF;
-    $bytes[2] = $int & 0xFF;
-    return $bytes;
-}
-
-function i16ToByteArray(int $int): array
-{
-    $bytes = array(0, 0);
-    $bytes[0] = $int >> 8 & 0xFF;
-    $bytes[1] = $int & 0xFF;
-    return $bytes;
-}
-
-function bytesToInt(?array $bytes): ?int
-{
-    if (is_null($bytes)) {
-        return null;
+    public static function i64ToByteArray(int $int): array
+    {
+        $bytes = array(0, 0, 0, 0, 0, 0, 0, 0);
+        $bytes[0] = $int >> 56 & 0xFF;
+        $bytes[1] = $int >> 48 & 0xFF;
+        $bytes[2] = $int >> 40 & 0xFF;
+        $bytes[3] = $int >> 32 & 0xFF;
+        $bytes[4] = $int >> 24 & 0xFF;
+        $bytes[5] = $int >> 16 & 0xFF;
+        $bytes[6] = $int >> 8 & 0xFF;
+        $bytes[7] = $int & 0xFF;
+        return $bytes;
     }
-    $value = 0;
-    foreach ($bytes as $element) {
-        $value = ($value * 256) + $element;
+
+    public static function i32ToByteArray(int $int): array
+    {
+        $bytes = array(0, 0, 0, 0);
+        $bytes[0] = $int >> 24 & 0xFF;
+        $bytes[1] = $int >> 16 & 0xFF;
+        $bytes[2] = $int >> 8 & 0xFF;
+        $bytes[3] = $int & 0xFF;
+        return $bytes;
     }
-    return $value;
+
+    public static function i24ToByteArray(int $int): array
+    {
+        $bytes = array(0, 0, 0);
+        $bytes[0] = $int >> 16 & 0xFF;
+        $bytes[1] = $int >> 8 & 0xFF;
+        $bytes[2] = $int & 0xFF;
+        return $bytes;
+    }
+
+    public static function i16ToByteArray(int $int): array
+    {
+        $bytes = array(0, 0);
+        $bytes[0] = $int >> 8 & 0xFF;
+        $bytes[1] = $int & 0xFF;
+        return $bytes;
+    }
+
+    public static function bytesToInt(?array $bytes): ?int
+    {
+        if (is_null($bytes)) {
+            return null;
+        }
+        $value = 0;
+        foreach ($bytes as $element) {
+            $value = ($value * 256) + $element;
+        }
+        return $value;
+    }
+
 }
+
