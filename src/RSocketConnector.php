@@ -63,10 +63,10 @@ class RSocketConnector
     }
 
     /**
-     * @param string $uri rsocket uri
+     * @param string $url rsocket uri
      * @return PromiseInterface<RSocket>
      */
-    public function connect(string $uri): PromiseInterface
+    public function connect(string $url): PromiseInterface
     {
         $setupPayload = new ConnectionSetupPayload();
         $setupPayload->setKeepAliveInterval($this->keepAliveInterval * 1000);
@@ -79,15 +79,15 @@ class RSocketConnector
         }
         $loop = $this->loop;
         $duplexConnPromise = null;
-        $uriArray = parse_url($uri);
+        $uriArray = parse_url($url);
         if ($uriArray !== false && array_key_exists("scheme", $uriArray)) {
             $scheme = $uriArray['scheme'];
             if ($scheme === 'tcp') {
-                $duplexConnPromise = (new Connector($loop))->connect($uri)->then(function (ConnectionInterface $connection) {
+                $duplexConnPromise = (new Connector($loop))->connect($url)->then(function (ConnectionInterface $connection) {
                     return new TcpDuplexConnection($connection);
                 });
             } else if ($scheme === 'ws') {
-                $duplexConnPromise = connect($uri)->then(function ($webSocket) {
+                $duplexConnPromise = connect($url)->then(function ($webSocket) {
                     return new PawlWebSocketDuplexConnection($webSocket);
                 });
             }
@@ -109,7 +109,7 @@ class RSocketConnector
                 });
             }
         }
-        return Promise::rejected($uri . " unsupported");
+        return Promise::rejected($url . " unsupported");
     }
 
 }
