@@ -4,6 +4,7 @@
 namespace RSocket\frame;
 
 use RSocket\io\ByteBuffer;
+use RSocket\Payload;
 use RSocket\utils\UTF8;
 
 
@@ -15,7 +16,7 @@ class SetupFrame extends RSocketFrame
     public int $keepAliveMaxLifetime = 90;
     public ?string $resumeToken;
     public bool $leaseEnable = false;
-
+    public ?Payload $payload;
 
     public static function fromBuffer(RSocketHeader $header, ByteBuffer $buffer): SetupFrame
     {
