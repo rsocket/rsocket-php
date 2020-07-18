@@ -82,3 +82,5 @@ Please check https://github.com/rsocket/rsocket-php/tree/master/tests/route
 * RxPHP: https://github.com/ReactiveX/RxPHP
 * New .phpstorm.meta.php features: https://blog.jetbrains.com/phpstorm/2019/02/new-phpstorm-meta-php-features/
 * PHP Reactive Programming: https://www.packtpub.com/web-development/php-reactive-programming
+* Ratchet: Asynchronous WebSocket server https://github.com/ratchetphp/Ratchet
+* Pawl: asynchronous WebSocket client https://github.com/ratchetphp/Pawl
