@@ -16,13 +16,13 @@ Scheduler::setDefaultFactory(function () use ($loop) {
     return new Scheduler\EventLoopScheduler($loop);
 });
 
-$listenUri = "tcp://127.0.0.1:42252";
+$listenUrl = "tcp://127.0.0.1:42252";
 $socketAcceptor = CallableSocketAcceptor::handle(function ($setupPayload, $sendingRSocket) {
     return AbstractRSocket::requestResponseHandler(function ($payload) {
         print('Received:' . $payload->getDataUtf8());
         return Observable::of(Payload::fromText("metadata", "PONG"));
     });
 });
-$server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUri);
-echo "RSocket Server started on ${listenUri}\n";
+$server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUrl);
+echo "RSocket Server started on ${listenUrl}\n";
 $loop->run();
