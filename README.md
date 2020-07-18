@@ -66,8 +66,7 @@ Please check https://github.com/rsocket/rsocket-php/tree/master/tests/route
   - [ ] Lease
 - Transport
   - [x] TCP
-  - [x] Websocket client
-  - [ ] Websocket server
+  - [x] Websocket
 - High Level APIs
   - [x] Client
   - [x] Server
