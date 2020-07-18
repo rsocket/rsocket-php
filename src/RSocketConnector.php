@@ -8,7 +8,9 @@ use RSocket\core\RSocketRequester;
 use React\Socket\Connector;
 use React\Socket\ConnectionInterface;
 use RSocket\transport\TcpDuplexConnection;
+use RSocket\transport\WebSocketDuplexConnection;
 use Rx\React\Promise;
+use function Ratchet\Client\connect;
 
 
 class RSocketConnector
@@ -75,24 +77,35 @@ class RSocketConnector
             $setupPayload->metadata = $this->payload->metadata;
             $setupPayload->data = $this->payload->data;
         }
-        $acceptor = $this->acceptor;
-        $connector = new Connector($this->loop);
         $loop = $this->loop;
-        return $connector->connect($uri)->then(function (ConnectionInterface $connection) use (&$setupPayload, &$acceptor, &$loop) {
-            $duplexConn = new TcpDuplexConnection($connection);
-            $rsocketRequester = new RSocketRequester($loop, $duplexConn, $setupPayload, "requester");
-            if (!is_null($acceptor)) {
-                $responder = $acceptor->accept($setupPayload, $rsocketRequester);
-                if (is_null($responder)) {
-                    $errorMessage = "RSOCKET-0x00000003: Connection refused, please check setup and security!";
-                    $rsocketRequester->close();
-                    return Promise::rejected($errorMessage);
+        $duplexConnPromise = null;
+        if (strpos($uri, 'tcp://') === 0) {
+            $duplexConnPromise = (new Connector($loop))->connect($uri)->then(function (ConnectionInterface $connection) {
+                return new TcpDuplexConnection($connection);
+            });
+        } else if (strpos($uri, "ws://") === 0) {
+            $duplexConnPromise = connect($uri)->then(function ($webSocket) {
+                return new WebSocketDuplexConnection($webSocket);
+            });
+        }
+        if ($duplexConnPromise !== null) {
+            $acceptor = $this->acceptor;
+            return $duplexConnPromise->then(function (DuplexConnection $duplexConn) use (&$setupPayload, &$acceptor, &$loop) {
+                $rsocketRequester = new RSocketRequester($loop, $duplexConn, $setupPayload, "requester");
+                if (!is_null($acceptor)) {
+                    $responder = $acceptor->accept($setupPayload, $rsocketRequester);
+                    if (is_null($responder)) {
+                        $errorMessage = "RSOCKET-0x00000003: Connection refused, please check setup and security!";
+                        $rsocketRequester->close();
+                        return Promise::rejected($errorMessage);
+                    }
+                    $rsocketRequester->setResponder($responder);
                 }
-                $rsocketRequester->setResponder($responder);
-            }
-            $rsocketRequester->sendSetupPayload();
-            return $rsocketRequester;
-        });
+                $rsocketRequester->sendSetupPayload();
+                return $rsocketRequester;
+            });
+        }
+        return Promise::rejected($uri . " unsupported");
     }
 
 }
