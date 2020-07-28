@@ -83,3 +83,4 @@ Please check https://github.com/rsocket/rsocket-php/tree/master/tests/route
 * PHP Reactive Programming: https://www.packtpub.com/web-development/php-reactive-programming
 * Ratchet: Asynchronous WebSocket server https://github.com/ratchetphp/Ratchet
 * Pawl: asynchronous WebSocket client https://github.com/ratchetphp/Pawl
+* PHP 8: Attributes: https://stitcher.io/blog/attributes-in-php-8
