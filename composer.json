@@ -31,7 +31,7 @@
     "react/socket": "v1.6.0",
     "reactivex/rxphp": "2.0.7",
     "ratchet/pawl": "^0.3",
-    "cboden/Ratchet": "^0.4"
+    "cboden/ratchet": "^0.4"
   },
   "require-dev": {
     "phpunit/phpunit": "9.*",
