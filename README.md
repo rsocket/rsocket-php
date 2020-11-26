@@ -1,5 +1,6 @@
 RSocket PHP
 ================
+[![Composer](https://img.shields.io/packagist/v/rsocket/rsocket-php)](https://packagist.org/packages/rsocket/rsocket-php)
 
 RSocket PHP SDK based on ReactPHP and RxPHP.
 
@@ -52,26 +53,26 @@ Please check https://github.com/rsocket/rsocket-php/tree/master/tests/route
 # RSocket
 
 - Operations
-  - [x] REQUEST_FNF
-  - [x] REQUEST_RESPONSE
-  - [x] REQUEST_STREAM
-  - [ ] REQUEST_CHANNEL
-  - [x] METADATA_PUSH
+    - [x] REQUEST_FNF
+    - [x] REQUEST_RESPONSE
+    - [x] REQUEST_STREAM
+    - [ ] REQUEST_CHANNEL
+    - [x] METADATA_PUSH
 - More Operations
-  - [x] Error
-  - [ ] Cancel
-  - [x] Keepalive
+    - [x] Error
+    - [ ] Cancel
+    - [x] Keepalive
 - QoS
-  - [ ] RequestN
-  - [ ] Lease
+    - [ ] RequestN
+    - [ ] Lease
 - Transport
-  - [x] TCP
-  - [x] Websocket
+    - [x] TCP
+    - [x] Websocket
 - High Level APIs
-  - [x] Client
-  - [x] Server
+    - [x] Client
+    - [x] Server
 - Misc
-  - [x] RxPHP
+    - [x] RxPHP
 
 # References
 
