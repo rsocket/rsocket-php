@@ -114,3 +114,4 @@ fabric.properties
 /build/
 
 # End of https://www.gitignore.io/api/composer,phpunit,jetbrains
+composer.lock
