@@ -27,6 +27,7 @@
     "docs": "https://github.com/rsocket/rsocket-php/wiki"
   },
   "require": {
+    "php": "7.4",
     "react/event-loop": "v1.1.1",
     "react/socket": "v1.6.0",
     "reactivex/rxphp": "2.0.7",
