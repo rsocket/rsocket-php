@@ -4,8 +4,6 @@
 namespace RSocket\routing;
 
 
-use RSocket\Payload;
-
 class JsonDecodeFactory
 {
     private static array $decodeHandlers = [];
@@ -17,13 +15,10 @@ class JsonDecodeFactory
 
     public static function getHandler(string $methodFullName): ?callable
     {
-        if (array_key_exists($methodFullName, self::$decodeHandlers)) {
-            return self::$decodeHandlers[$methodFullName];
-        }
-        return null;
+        return self::$decodeHandlers[$methodFullName] ?? null;
     }
 
-    public static function decodeUtf8Text(?string $utf8text, string $methodFullName)
+    public static function decodeUtf8Text(?string $utf8text, string $methodFullName): object
     {
         if ($utf8text !== null && $utf8text !== '') {
             $firstChar = $utf8text[0];
