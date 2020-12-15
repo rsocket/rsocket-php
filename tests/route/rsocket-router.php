@@ -2,9 +2,6 @@
 
 require '../../vendor/autoload.php';
 
-use RSocket\AbstractRSocket;
-use RSocket\CallableSocketAcceptor;
-use RSocket\Payload;
 use RSocket\routing\JsonSupport;
 use RSocket\routing\RSocketServiceRouter;
 use RSocket\routing\ServiceRouterSocketAcceptor;
