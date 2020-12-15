@@ -9,3 +9,6 @@ server-stream:
 
 stream:
    rsocket-cli --stream -i "Word Up" --debug tcp://localhost:42252
+
+qodana:
+   docker run -it -v ~/github/rsocket/rsocket-php/:/data/project/  -p 8080:8080 jetbrains/qodana --show-report
