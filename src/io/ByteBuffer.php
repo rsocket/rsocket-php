@@ -21,7 +21,7 @@ class ByteBuffer
 
     public function __construct()
     {
-        $this->buffer = array();
+        $this->buffer = [];
     }
 
 
@@ -166,7 +166,7 @@ class ByteBuffer
 
     public static function i64ToByteArray(int $int): array
     {
-        $bytes = array(0, 0, 0, 0, 0, 0, 0, 0);
+        $bytes = [0, 0, 0, 0, 0, 0, 0, 0];
         $bytes[0] = $int >> 56 & 0xFF;
         $bytes[1] = $int >> 48 & 0xFF;
         $bytes[2] = $int >> 40 & 0xFF;
@@ -180,7 +180,7 @@ class ByteBuffer
 
     public static function i32ToByteArray(int $int): array
     {
-        $bytes = array(0, 0, 0, 0);
+        $bytes = [0, 0, 0, 0];
         $bytes[0] = $int >> 24 & 0xFF;
         $bytes[1] = $int >> 16 & 0xFF;
         $bytes[2] = $int >> 8 & 0xFF;
@@ -190,7 +190,7 @@ class ByteBuffer
 
     public static function i24ToByteArray(int $int): array
     {
-        $bytes = array(0, 0, 0);
+        $bytes = [0, 0, 0];
         $bytes[0] = $int >> 16 & 0xFF;
         $bytes[1] = $int >> 8 & 0xFF;
         $bytes[2] = $int & 0xFF;
@@ -199,7 +199,7 @@ class ByteBuffer
 
     public static function i16ToByteArray(int $int): array
     {
-        $bytes = array(0, 0);
+        $bytes = [0, 0];
         $bytes[0] = $int >> 8 & 0xFF;
         $bytes[1] = $int & 0xFF;
         return $bytes;
