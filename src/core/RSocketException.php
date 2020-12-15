@@ -4,7 +4,9 @@
 namespace RSocket\core;
 
 
-class RSocketException extends \Exception
+use Exception;
+
+class RSocketException extends Exception
 {
     public static int $RESERVED = 0x00000000;
     public static int $INVALID_SETUP = 0x00000001;
