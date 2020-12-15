@@ -2,9 +2,7 @@
 
 require '../../vendor/autoload.php';
 
-use RSocket\Payload;
 use RSocket\routing\RSocketServiceStub;
-use RSocket\RSocket;
 use RSocket\RSocketConnector;
 use Rx\Observable;
 use Rx\Scheduler;
