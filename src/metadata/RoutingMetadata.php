@@ -13,7 +13,7 @@ class RoutingMetadata extends TaggingMetadata
     {
         $this->routingKey = $routingKey;
         $this->extraTags = $extraTags;
-        $tags = array();
+        $tags = [];
         $tags[] = $routingKey;
         if ($extraTags !== null) {
             array_push($tags, ...$extraTags);
@@ -41,11 +41,11 @@ class RoutingMetadata extends TaggingMetadata
             $pos = strrpos($this->routingKey, ".", -1);
             $serviceName = substr($this->routingKey, 0, $pos);
             $method = substr($this->routingKey, $pos + 1);
-            return array(
+            return [
                 "service" => $serviceName,
                 "method" => $method
-            );
+            ];
         }
-        return array();
+        return [];
     }
 }
