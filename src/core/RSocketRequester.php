@@ -4,6 +4,7 @@
 namespace RSocket\core;
 
 
+use Exception;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
 use RSocket\ConnectionSetupPayload;
@@ -104,6 +105,7 @@ class RSocketRequester implements RSocket
         }
     }
 
+    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
     public function receiveFrame(RSocketFrame $frame): void
     {
         $header = $frame->header;
@@ -209,7 +211,7 @@ class RSocketRequester implements RSocket
 
     public function requestChannel(Observable $flux): Observable
     {
-        return Observable::error(new \Exception("Unsupported"));
+        return Observable::error(new Exception("Unsupported"));
     }
 
     public function metadataPush(Payload $payload): Observable
