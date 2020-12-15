@@ -4,6 +4,7 @@
 namespace RSocket\core;
 
 
+use Exception;
 use React\EventLoop\LoopInterface;
 use React\Socket\Server;
 use RSocket\frame\FrameCodec;
@@ -25,7 +26,7 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
     private SocketAcceptor $socketAcceptor;
     private LoopInterface $loop;
     private Server $socketServer;
-    private array $handlers = array();
+    private array $handlers = [];
 
     public function __construct(string $url, SocketAcceptor $socketAcceptor, LoopInterface $loop)
     {
@@ -89,7 +90,7 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
 
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e): void
+    public function onError(ConnectionInterface $conn, Exception $e): void
     {
     }
 
