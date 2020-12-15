@@ -9,7 +9,7 @@ class ByteBufferTest extends TestCase
 {
     public function testRead(): void
     {
-        $array = array(1, 2, 1, 1);
+        $array = [1, 2, 1, 1];
         $buffer = ByteBuffer::wrap($array);
         print($buffer->readI8());
         print($buffer->readI8());
