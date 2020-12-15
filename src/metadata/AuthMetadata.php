@@ -16,7 +16,7 @@ class AuthMetadata extends MetadataEntry
         $this->authData = $authData;
         $this->authTypeId = $authTypeId;
         $this->mimeType = 'message/x.rsocket.authentication.v0';
-        $content = array();
+        $content = [];
         $content[] = (0x80 | $this->authTypeId);
         array_push($content, ...$authData);
         $this->content = $content;
