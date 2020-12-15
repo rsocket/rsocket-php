@@ -18,6 +18,7 @@ class SetupFrame extends RSocketFrame
     public bool $leaseEnable = false;
     public ?Payload $payload;
 
+    /** @noinspection PhpUnusedLocalVariableInspection */
     public static function fromBuffer(RSocketHeader $header, ByteBuffer $buffer): SetupFrame
     {
         $frame = new self();
