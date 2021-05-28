@@ -82,11 +82,11 @@ class RSocketConnector
         $uriArray = parse_url($url);
         if ($uriArray !== false && array_key_exists("scheme", $uriArray)) {
             $scheme = $uriArray['scheme'];
-            if ($scheme === 'tcp') {
+            if ('tls' === $scheme || 'tcp' === $scheme) {
                 $duplexConnPromise = (new Connector($loop))->connect($url)->then(function (ConnectionInterface $connection) {
                     return new TcpDuplexConnection($connection);
                 });
-            } else if ($scheme === 'ws') {
+            } else if ('ws' === $scheme) {
                 $duplexConnPromise = connect($url)->then(function ($webSocket) {
                     return new PawlWebSocketDuplexConnection($webSocket);
                 });
