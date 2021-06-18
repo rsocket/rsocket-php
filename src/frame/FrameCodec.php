@@ -174,11 +174,9 @@ class FrameCodec
         $frameBuffer = new ByteBuffer();
         $frameBuffer->writeI24(0); // frame length
         $frameBuffer->writeI32($streamId); //stream id
-        $flags = 0;
+        $flags = 0x20; // next
         if ($completed) {
             $flags |= 0x40; //complete
-        } else {
-            $flags |= 0x20; //next
         }
         self::writeTFrameTypeAndFlags($frameBuffer, FrameType::$PAYLOAD, $payload->metadata, $flags);
         self::writePayload($frameBuffer, $payload);
