@@ -22,6 +22,10 @@ class RSocketConnector
     public string $metadataMimeType = "message/x.rsocket.composite-metadata.v0";
     private ?SocketAcceptor $acceptor = null;
     private LoopInterface $loop;
+    /**
+     * @var callable
+     */
+    private $disconnectHandler;
 
     public static function create(LoopInterface $loop): RSocketConnector
     {
@@ -62,6 +66,15 @@ class RSocketConnector
         return $this;
     }
 
+    public function setDisconnectHandler(callable $disconnectHandler): self
+    {
+        if (!is_null($disconnectHandler)) {
+            $this->disconnectHandler = $disconnectHandler;
+        }
+
+        return $this;
+    }
+
     /**
      * @param string $url rsocket uri
      * @return PromiseInterface<RSocket>
@@ -95,6 +108,10 @@ class RSocketConnector
                 $acceptor = $this->acceptor;
                 return $duplexConnPromise->then(function (DuplexConnection $duplexConn) use (&$setupPayload, &$acceptor, &$loop) {
                     $rsocketRequester = new RSocketRequester($loop, $duplexConn, $setupPayload, "requester");
+                    if (!is_null($this->disconnectHandler)) {
+                        $rsocketRequester->setDisconnectHandler($this->disconnectHandler);
+                    }
+
                     if (!is_null($acceptor)) {
                         $responder = $acceptor->accept($setupPayload, $rsocketRequester);
                         if (is_null($responder)) {

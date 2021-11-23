@@ -34,6 +34,10 @@ class RSocketRequester implements RSocket
      * @var callable error consumer
      */
     private $errorConsumer;
+    /**
+     * @var callable
+     */
+    private $disconnectHandler;
 
     public function __construct(LoopInterface $loop, DuplexConnection $conn, ConnectionSetupPayload $setupPayload, string $mode)
     {
@@ -73,6 +77,15 @@ class RSocketRequester implements RSocket
         if (!is_null($errorConsumer)) {
             $this->errorConsumer = $errorConsumer;
         }
+    }
+
+    public function setDisconnectHandler(callable $disconnectHandler): self
+    {
+        if (!is_null($disconnectHandler)) {
+            $this->disconnectHandler = $disconnectHandler;
+        }
+
+        return $this;
     }
 
     public function sendSetupPayload(): void
@@ -222,6 +235,10 @@ class RSocketRequester implements RSocket
 
     public function close(): void
     {
+        if ($this->disconnectHandler && is_callable($this->disconnectHandler)) {
+            call_user_func($this->disconnectHandler);
+        }
+
         if (!$this->closed) {
             $this->closed = true;
             $this->_availability = 0.0;
