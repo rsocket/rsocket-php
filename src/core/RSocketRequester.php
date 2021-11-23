@@ -16,6 +16,7 @@ use RSocket\Payload;
 use RSocket\RSocket;
 use Rx\Observable;
 use Rx\Subject\AsyncSubject;
+use Rx\Subject\ReplaySubject;
 
 class RSocketRequester implements RSocket
 {
@@ -133,9 +134,11 @@ class RSocketRequester implements RSocket
                 break;
             case FrameType::$PAYLOAD:
                 if (array_key_exists($streamId, $this->senders)) {
-                    $asyncSubject = $this->senders[$streamId];
-                    $asyncSubject->onNext($frame->payload);
-                    $asyncSubject->onCompleted();
+                    $subject = $this->senders[$streamId];
+                    $subject->onNext($frame->payload);
+                    if (!$subject instanceof ReplaySubject) {
+                        $subject->onCompleted();
+                    }
                 }
                 break;
             case FrameType::$ERROR:
@@ -214,12 +217,12 @@ class RSocketRequester implements RSocket
     {
         $streamId = $this->streamIdSupplier->nextStreamId($this->senders);
         $this->conn->write(FrameCodec::encodeRequestStreamFrame($streamId, $this->MAX_REQUEST_SIZE, $payload));
-        $asyncSubject = new AsyncSubject();
-        $asyncSubject->finally(function () use (&$asyncSubject) {
-            unset($asyncSubject);
+        $replaySubject = new ReplaySubject();
+        $replaySubject->finally(function () use (&$replaySubject) {
+            unset($replaySubject);
         });
-        $this->senders[$streamId] = $asyncSubject;
-        return $asyncSubject;
+        $this->senders[$streamId] = $replaySubject;
+        return $replaySubject;
     }
 
     public function requestChannel(Observable $flux): Observable
