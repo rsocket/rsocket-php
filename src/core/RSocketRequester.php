@@ -140,7 +140,7 @@ class RSocketRequester implements RSocket
                 break;
             case FrameType::$ERROR:
                 if (array_key_exists($streamId, $this->senders)) {
-                    $error = new RSocketException($frame->code, $frame->message);
+                    $error = new RSocketException($frame->message, $frame->code);
                     if ($streamId === 0) {
                         ($this->errorConsumer)($error);
                     } else {
