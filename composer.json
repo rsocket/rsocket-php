@@ -27,10 +27,10 @@
     "docs": "https://github.com/rsocket/rsocket-php/wiki"
   },
   "require": {
-    "php": "~7.4",
+    "php": ">=7.4",
     "react/event-loop": "v1.1.1",
     "react/socket": "v1.6.0",
-    "reactivex/rxphp": "2.0.7",
+    "reactivex/rxphp": "2.0.9",
     "ratchet/pawl": "^0.3",
     "cboden/ratchet": "^0.4",
     "ext-json": "*"
