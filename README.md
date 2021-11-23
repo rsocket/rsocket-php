@@ -6,7 +6,7 @@ RSocket PHP SDK based on ReactPHP and RxPHP.
 
 # Requirements
 
-* PHP 7.4.x
+* PHP 7.4+
 
 # Examples
 
