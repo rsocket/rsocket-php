@@ -92,7 +92,7 @@ class RSocketConnector
         if ($uriArray !== false && array_key_exists("scheme", $uriArray)) {
             $scheme = $uriArray['scheme'];
             if ('tls' === $scheme || 'tcp' === $scheme) {
-                $duplexConnPromise = (new Connector(Loop::get()))->connect($url)->then(function (ConnectionInterface $connection) {
+                $duplexConnPromise = (new Connector())->connect($url)->then(function (ConnectionInterface $connection) {
                     return new TcpDuplexConnection($connection);
                 });
             } else if ('ws' === $scheme) {
