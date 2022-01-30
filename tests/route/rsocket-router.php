@@ -2,6 +2,7 @@
 
 require '../../vendor/autoload.php';
 
+use React\EventLoop\Loop;
 use RSocket\routing\JsonSupport;
 use RSocket\routing\RSocketServiceRouter;
 use RSocket\routing\ServiceRouterSocketAcceptor;
@@ -9,11 +10,10 @@ use RSocket\RSocketServer;
 use Rx\Observable;
 use Rx\Scheduler;
 
-$loop = React\EventLoop\Factory::create();
 
 /** @noinspection PhpUnhandledExceptionInspection */
-Scheduler::setDefaultFactory(function () use ($loop) {
-    return new Scheduler\EventLoopScheduler($loop);
+Scheduler::setDefaultFactory(static function () {
+    return new Scheduler\EventLoopScheduler(Loop::get());
 });
 
 class Account extends JsonSupport
@@ -52,9 +52,9 @@ $router->addService("com.example.AccountService", new AccountServiceImpl());
 
 $listenUri = "tcp://127.0.0.1:42252";
 $socketAcceptor = new ServiceRouterSocketAcceptor($router);
-$server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUri);
+$server = RSocketServer::create($socketAcceptor)->bind($listenUri);
 echo "RSocket Server started on ${listenUri}\n";
-$loop->run();
+Loop::get()->run();
 
 
 

@@ -2,6 +2,7 @@
 
 require '../../vendor/autoload.php';
 
+use React\EventLoop\Loop;
 use RSocket\routing\RSocketServiceStub;
 use RSocket\RSocketConnector;
 use Rx\Observable;
@@ -31,14 +32,13 @@ class RSocketAccountServiceStubs
 
 }
 
-$loop = React\EventLoop\Factory::create();
 
 /** @noinspection PhpUnhandledExceptionInspection */
-Scheduler::setDefaultFactory(function () use ($loop) {
-    return new Scheduler\EventLoopScheduler($loop);
+Scheduler::setDefaultFactory(function () {
+    return new Scheduler\EventLoopScheduler(Loop::get());
 });
 
-$rsocket = Observable::fromPromise(RSocketConnector::create($loop)->connect("tcp://127.0.0.1:42252"));
+$rsocket = Observable::fromPromise(RSocketConnector::create()->connect("tcp://127.0.0.1:42252"));
 
 $stubs = new RSocketAccountServiceStubs($rsocket);
 
@@ -50,4 +50,4 @@ $accountService->findById("1")->subscribe(
     }
 );
 
-$loop->run();
+Loop::get()->run();
