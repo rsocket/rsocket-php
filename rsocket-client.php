@@ -2,17 +2,16 @@
 
 require 'vendor/autoload.php';
 
+use React\EventLoop\Loop;
 use RSocket\Payload;
 use RSocket\RSocket;
 use RSocket\RSocketConnector;
 use Rx\Observable;
 use Rx\Scheduler;
 
-$loop = React\EventLoop\Factory::create();
-
 /** @noinspection PhpUnhandledExceptionInspection */
-Scheduler::setDefaultFactory(function () use ($loop) {
-    return new Scheduler\EventLoopScheduler($loop);
+Scheduler::setDefaultFactory(function () {
+    return new Scheduler\EventLoopScheduler(Loop::get());
 });
 
 $rsocketCall = function (RSocket $rsocket) {
@@ -24,11 +23,11 @@ $rsocketCall = function (RSocket $rsocket) {
     );
 };
 
-$rsocketPromise = RSocketConnector::create($loop)->connect("tcp://127.0.0.1:42252");
+$rsocketPromise = RSocketConnector::create()->connect("tcp://127.0.0.1:42252");
 $rsocketPromise->then($rsocketCall);
 $target = Observable::fromPromise($rsocketPromise);
 $target->map($rsocketCall)->subscribe();
 
-$loop->run();
+Loop::get()->run();
 
 
