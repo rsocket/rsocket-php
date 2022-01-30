@@ -10,7 +10,7 @@
   ],
   "homepage": "https://github.com/rsocket/rsocket-php",
   "time": "2022-01-28",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "linux_china",
