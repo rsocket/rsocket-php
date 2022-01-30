@@ -28,7 +28,7 @@ class RSocketServer
         if ($urlArray !== false && array_key_exists("scheme", $urlArray)) {
             $scheme = $urlArray['scheme'];
             if ($scheme === 'tcp') {
-                $server = new TcpServer($url, Loop::get());
+                $server = new TcpServer($url);
                 $responder = new TcpSocketRSocketResponder($url, $server, $this->socketAcceptor);
                 $responder->accept();
                 return $responder;
