@@ -1,0 +1,7 @@
+### RSocket ping test
+//@name ping
+RSOCKET ping
+Host: tcp://127.0.0.1:42252
+Content-Type: text/plain
+
+PING
