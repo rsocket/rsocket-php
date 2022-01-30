@@ -1,7 +1,7 @@
 {
   "name": "rsocket/rsocket-php",
   "description": "RSocket PHP SDK based on ReactPHP and RxPHP",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "library",
   "keywords": [
     "rsocket",
@@ -9,7 +9,7 @@
     "reactive"
   ],
   "homepage": "https://github.com/rsocket/rsocket-php",
-  "time": "2020-02-22",
+  "time": "2022-01-28",
   "license": "Apache License 2.0",
   "authors": [
     {
