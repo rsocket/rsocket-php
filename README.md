@@ -13,11 +13,11 @@ RSocket PHP SDK based on ReactPHP and RxPHP.
 ### RSocket Client
 
 ```php
-Scheduler::setDefaultFactory(function () use ($loop) {
-    return new Scheduler\EventLoopScheduler($loop);
+Scheduler::setDefaultFactory(function () {
+    return new Scheduler\EventLoopScheduler(Loop::get());
 });
 
-$rsocketPromise = RSocketConnector::create($loop)->connect("tcp://127.0.0.1:42252");
+$rsocketPromise = RSocketConnector::create()->connect("tcp://127.0.0.1:42252");
 
 $rsocketPromise->then(function (RSocket $rsocket) {
     $observablePayload = $rsocket->requestResponse(Payload::fromText("text/plain", "Ping"));
@@ -32,8 +32,8 @@ $rsocketPromise->then(function (RSocket $rsocket) {
 ### RSocket Server
 
 ```php
-Scheduler::setDefaultFactory(function () use ($loop) {
-    return new Scheduler\EventLoopScheduler($loop);
+Scheduler::setDefaultFactory(function () {
+    return new Scheduler\EventLoopScheduler(Loop::get());
 });
 
 $listenUri = "tcp://127.0.0.1:42252";
@@ -42,7 +42,7 @@ $socketAcceptor = CallableSocketAcceptor::handle(function ($setupPayload, $sendi
         return Observable::of(Payload::fromText("metadata", "PONG"));
     });
 });
-$server = RSocketServer::create($loop, $socketAcceptor)->bind($listenUri);
+$server = RSocketServer::create($socketAcceptor)->bind($listenUri);
 print("RSocket Server started on ${listenUri}");
 ```
 
