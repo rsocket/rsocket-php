@@ -4,7 +4,6 @@
 namespace RSocket;
 
 
-use React\EventLoop\Loop;
 use  React\Socket\TcpServer;
 use RSocket\core\RatchetWebSocketRSocketResponder;
 use RSocket\core\RSocketException;

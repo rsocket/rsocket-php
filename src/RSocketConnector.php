@@ -2,7 +2,6 @@
 
 namespace RSocket;
 
-use React\EventLoop\Loop;
 use React\Promise\PromiseInterface;
 use RSocket\core\RSocketRequester;
 use React\Socket\Connector;
