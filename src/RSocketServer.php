@@ -4,7 +4,7 @@
 namespace RSocket;
 
 
-use React\EventLoop\LoopInterface;
+use React\EventLoop\Loop;
 use  React\Socket\TcpServer;
 use RSocket\core\RatchetWebSocketRSocketResponder;
 use RSocket\core\RSocketException;
@@ -14,12 +14,10 @@ use RSocket\io\Closeable;
 class RSocketServer
 {
     private SocketAcceptor $socketAcceptor;
-    private LoopInterface $loop;
 
-    public static function create(LoopInterface $loop, SocketAcceptor $socketAcceptor): RSocketServer
+    public static function create(SocketAcceptor $socketAcceptor): RSocketServer
     {
         $server = new self();
-        $server->loop = $loop;
         $server->socketAcceptor = $socketAcceptor;
         return $server;
     }
@@ -30,13 +28,13 @@ class RSocketServer
         if ($urlArray !== false && array_key_exists("scheme", $urlArray)) {
             $scheme = $urlArray['scheme'];
             if ($scheme === 'tcp') {
-                $server = new TcpServer($url, $this->loop);
-                $responder = new TcpSocketRSocketResponder($url, $server, $this->socketAcceptor, $this->loop);
+                $server = new TcpServer($url, Loop::get());
+                $responder = new TcpSocketRSocketResponder($url, $server, $this->socketAcceptor);
                 $responder->accept();
                 return $responder;
             }
             if ($scheme === 'ws') {
-                $responder = new RatchetWebSocketRSocketResponder($url, $this->socketAcceptor, $this->loop);
+                $responder = new RatchetWebSocketRSocketResponder($url, $this->socketAcceptor);
                 return $responder;
             }
         }

@@ -5,8 +5,7 @@ namespace RSocket\core;
 
 
 use Exception;
-use React\EventLoop\LoopInterface;
-use React\Socket\Server;
+use React\Socket\SocketServer;
 use RSocket\frame\FrameCodec;
 use RSocket\frame\FrameType;
 use RSocket\io\ByteBuffer;
@@ -24,20 +23,18 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
 {
     private string $url;
     private SocketAcceptor $socketAcceptor;
-    private LoopInterface $loop;
-    private Server $socketServer;
+    private SocketServer $socketServer;
     private array $handlers = [];
 
-    public function __construct(string $url, SocketAcceptor $socketAcceptor, LoopInterface $loop)
+    public function __construct(string $url, SocketAcceptor $socketAcceptor)
     {
         $this->url = $url;
         $urlArray = parse_url($url);
         $this->socketAcceptor = $socketAcceptor;
-        $this->loop = $loop;
         $wsServer = new WsServer($this);
-        $this->socketServer = new Server($urlArray['host'] . ':' . $urlArray['port'], $loop);
+        $this->socketServer = new SocketServer($urlArray['host'] . ':' . $urlArray['port']);
         // start http server with websocket support
-        new IoServer(new HttpServer($wsServer), $this->socketServer, $this->loop);
+        new IoServer(new HttpServer($wsServer), $this->socketServer);
     }
 
     public function onOpen(ConnectionInterface $conn): void
@@ -60,7 +57,7 @@ class RatchetWebSocketRSocketResponder extends RSocketBaseResponder implements C
             if ($header->type === FrameType::$SETUP) {
                 $setupPayload = $this->parseSetupPayload($frame);
                 $duplexConn = new RatchetWebSocketDuplexConnection($from);
-                $temp = new RSocketRequester($this->loop, $duplexConn, $setupPayload, 'responder');
+                $temp = new RSocketRequester( $duplexConn, $setupPayload, 'responder');
                 $responder = $this->socketAcceptor->accept($setupPayload, $temp);
                 if (is_null($responder)) {
                     $message = "Failed to accept RSocket connection";

@@ -2,7 +2,7 @@
 
 namespace RSocket;
 
-use React\EventLoop\LoopInterface;
+use React\EventLoop\Loop;
 use React\Promise\PromiseInterface;
 use RSocket\core\RSocketRequester;
 use React\Socket\Connector;
@@ -21,17 +21,14 @@ class RSocketConnector
     public string $dataMimeType = "application/json";
     public string $metadataMimeType = "message/x.rsocket.composite-metadata.v0";
     private ?SocketAcceptor $acceptor = null;
-    private LoopInterface $loop;
     /**
      * @var callable
      */
     private $disconnectHandler;
 
-    public static function create(LoopInterface $loop): RSocketConnector
+    public static function create(): RSocketConnector
     {
-        $RSocketConnector = new self();
-        $RSocketConnector->loop = $loop;
-        return $RSocketConnector;
+        return new self();
     }
 
 
@@ -90,13 +87,12 @@ class RSocketConnector
             $setupPayload->metadata = $this->payload->metadata;
             $setupPayload->data = $this->payload->data;
         }
-        $loop = $this->loop;
         $duplexConnPromise = null;
         $uriArray = parse_url($url);
         if ($uriArray !== false && array_key_exists("scheme", $uriArray)) {
             $scheme = $uriArray['scheme'];
             if ('tls' === $scheme || 'tcp' === $scheme) {
-                $duplexConnPromise = (new Connector($loop))->connect($url)->then(function (ConnectionInterface $connection) {
+                $duplexConnPromise = (new Connector(Loop::get()))->connect($url)->then(function (ConnectionInterface $connection) {
                     return new TcpDuplexConnection($connection);
                 });
             } else if ('ws' === $scheme) {
@@ -106,8 +102,8 @@ class RSocketConnector
             }
             if ($duplexConnPromise !== null) {
                 $acceptor = $this->acceptor;
-                return $duplexConnPromise->then(function (DuplexConnection $duplexConn) use (&$setupPayload, &$acceptor, &$loop) {
-                    $rsocketRequester = new RSocketRequester($loop, $duplexConn, $setupPayload, "requester");
+                return $duplexConnPromise->then(function (DuplexConnection $duplexConn) use (&$setupPayload, &$acceptor) {
+                    $rsocketRequester = new RSocketRequester($duplexConn, $setupPayload, "requester");
                     if (!is_null($this->disconnectHandler)) {
                         $rsocketRequester->setDisconnectHandler($this->disconnectHandler);
                     }

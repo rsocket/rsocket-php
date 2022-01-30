@@ -4,7 +4,6 @@
 namespace RSocket\core;
 
 
-use React\EventLoop\LoopInterface;
 use React\Promise\Promise;
 use React\Promise\Deferred;
 use React\Socket\ConnectionInterface;
@@ -21,14 +20,12 @@ class TcpSocketRSocketResponder extends RSocketBaseResponder implements Closeabl
     private string $url;
     private ServerInterface $serverInterface;
     private SocketAcceptor $socketAcceptor;
-    private LoopInterface $loop;
 
-    public function __construct(string $url, ServerInterface $serverInterface, SocketAcceptor $socketAcceptor, LoopInterface $loop)
+    public function __construct(string $url, ServerInterface $serverInterface, SocketAcceptor $socketAcceptor)
     {
         $this->url = $url;
         $this->serverInterface = $serverInterface;
         $this->socketAcceptor = $socketAcceptor;
-        $this->loop = $loop;
     }
 
 
@@ -50,7 +47,7 @@ class TcpSocketRSocketResponder extends RSocketBaseResponder implements Closeabl
                 $header = $frame->header;
                 if ($header->type === FrameType::$SETUP) {
                     $setupPayload = $this->parseSetupPayload($frame);
-                    $temp = new RSocketRequester($this->loop, $duplexConn, $setupPayload, 'responder');
+                    $temp = new RSocketRequester($duplexConn, $setupPayload, 'responder');
                     $responder = $socketAcceptor->accept($setupPayload, $temp);
                     if (is_null($responder)) {
                         $message = "Failed to accept RSocket connection";

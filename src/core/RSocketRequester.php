@@ -5,7 +5,7 @@ namespace RSocket\core;
 
 
 use Exception;
-use React\EventLoop\LoopInterface;
+use React\EventLoop\Loop;
 use React\EventLoop\TimerInterface;
 use RSocket\ConnectionSetupPayload;
 use RSocket\DuplexConnection;
@@ -30,7 +30,6 @@ class RSocketRequester implements RSocket
     private bool $closed = false;
     private float $_availability = 1.0;
     private int $MAX_REQUEST_SIZE = 0x7FFFFFFF;
-    private LoopInterface $loop;
     /**
      * @var callable error consumer
      */
@@ -40,9 +39,8 @@ class RSocketRequester implements RSocket
      */
     private $disconnectHandler;
 
-    public function __construct(LoopInterface $loop, DuplexConnection $conn, ConnectionSetupPayload $setupPayload, string $mode)
+    public function __construct(DuplexConnection $conn, ConnectionSetupPayload $setupPayload, string $mode)
     {
-        $this->loop = $loop;
         $this->conn = $conn;
         $this->responder = EmptyRSocketResponder::getInstance();
         $this->setupPayload = $setupPayload;
@@ -94,7 +92,7 @@ class RSocketRequester implements RSocket
         $this->conn->init();
         $this->conn->write($this->setupPayloadFrame());
         if ($this->mode === 'requester') {
-            $this->keepAliveTimer = $this->loop->addPeriodicTimer($this->setupPayload->getKeepAliveInterval() / 1000, function () {
+            $this->keepAliveTimer = Loop::get()->addPeriodicTimer($this->setupPayload->getKeepAliveInterval() / 1000, function () {
                 if (!$this->closed) {
                     $this->conn->write(FrameCodec::encodeKeepAlive(false, 0));
                 } else {
@@ -107,7 +105,7 @@ class RSocketRequester implements RSocket
     public function clearInterval(): void
     {
         if (!is_null($this->keepAliveTimer)) {
-            $this->loop->cancelTimer($this->keepAliveTimer);
+            Loop::get()->cancelTimer($this->keepAliveTimer);
         }
     }
 
